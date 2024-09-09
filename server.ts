@@ -1,7 +1,9 @@
 import Fastify, { FastifyInstance, RouteShorthandOptions } from 'fastify'
 import { Server, IncomingMessage, ServerResponse } from 'http'
+import { CrosswordService } from './services/crosswordService'
 
 const server: FastifyInstance = Fastify({})
+const crosswordService = CrosswordService.getInstance()
 
 const opts: RouteShorthandOptions = {
   schema: {
@@ -20,6 +22,10 @@ const opts: RouteShorthandOptions = {
 
 server.get('/ping', opts, async (request, reply) => {
   return { pong: 'it worked!' }
+})
+
+server.get('/crossword', async (request, reply) => {
+  return crosswordService.generateCrossword(["banana", "apple", "spire"]);
 })
 
 const start = async () => {
