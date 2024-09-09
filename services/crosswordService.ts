@@ -41,7 +41,6 @@ export class CrosswordService {
     }
 
     crossword.normalizeCoords();
-    // Assuming _exportService is defined elsewhere in the class
     this._exportService.exportToCsvOnDisc(crossword);
     return crossword;
   }
