@@ -2,10 +2,10 @@ import { Answer } from "./answer";
 import { Cell } from "./cell";
 
 export class Crossword {
-    private answers: Answer[];
-    private cells: Cell[];
-    private verticalLinkingTargets: Cell[];
-    private horizontalLinkingTargets: Cell[];
+    answers: Answer[];
+    cells: Cell[];
+    verticalLinkingTargets: Cell[];
+    horizontalLinkingTargets: Cell[];
 
     constructor() {
         this.answers = [];

@@ -1,10 +1,15 @@
 import { Crossword } from "../models/crossword";
+import { ExportService } from "./exportService";
 
 
 export class CrosswordService {
   private static instance: CrosswordService;
 
-  private constructor() {}
+  private _exportService: ExportService;  
+
+  private constructor() {
+    this._exportService = ExportService.getInstance();
+  }
 
   public static getInstance(): CrosswordService {
     if (!CrosswordService.instance) {
@@ -22,22 +27,22 @@ export class CrosswordService {
     let round = 1;
     const attemptsNumber = 2;
     while (round <= attemptsNumber && wordsList.length > 0) {
-        for (let i = 0; i < wordsList.length; i++) {
-            let isSuccess = crossword.tryAddAnswer(wordsList[i], true); // true for horizontal
-            if (!isSuccess) {
-                isSuccess = crossword.tryAddAnswer(wordsList[i], false); // false for vertical
-            }
-            if (isSuccess) {
-                wordsList.splice(i, 1);
-                i--;
-            }
+      for (let i = 0; i < wordsList.length; i++) {
+        let isSuccess = crossword.tryAddAnswer(wordsList[i], true); // true for horizontal
+        if (!isSuccess) {
+            isSuccess = crossword.tryAddAnswer(wordsList[i], false); // false for vertical
         }
-        round++;            
+        if (isSuccess) {
+            wordsList.splice(i, 1);
+            i--;
+        }
+      }
+      round++;            
     }
 
     crossword.normalizeCoords();
     // Assuming _exportService is defined elsewhere in the class
-    // this._exportService.exportToCsvOnDisc(crossword);
+    this._exportService.exportToCsvOnDisc(crossword);
     return crossword;
   }
 }
