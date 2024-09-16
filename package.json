@@ -10,7 +10,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "fastify": "^4.28.1"
+    "@types/express": "^4.17.21",
+    "@types/sqlite3": "^3.1.11",
+    "fastify": "^4.28.1",
+    "sqlite3": "^5.1.7"
   },
   "devDependencies": {
     "@types/node": "^22.5.4",

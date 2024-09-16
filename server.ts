@@ -1,6 +1,6 @@
 import Fastify, { FastifyInstance, RouteShorthandOptions } from 'fastify'
-import { Server, IncomingMessage, ServerResponse } from 'http'
 import { CrosswordService } from './services/crosswordService'
+import { addWord, getWords } from './services/dataService';
 
 const server: FastifyInstance = Fastify({})
 const crosswordService = CrosswordService.getInstance()
@@ -22,6 +22,18 @@ const opts: RouteShorthandOptions = {
 
 server.get('/ping', opts, async (request, reply) => {
   return { pong: 'it worked!' }
+})
+
+server.post('/word', async (request: any, reply: any) => {
+  const word = request.body.word;
+  const answer = request.body.answer;
+  addWord(word, answer);
+  return reply.send({ success: true });
+})
+
+server.get('/words', async (request: any, reply: any) => {
+  const words = await getWords();
+  return reply.send({ words });
 })
 
 server.get('/crossword', async (request, reply) => {
