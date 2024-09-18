@@ -3,7 +3,9 @@ import { CrosswordService } from './services/crosswordService'
 import { addWord, getWords } from './services/dataService';
 import { AIService } from './services/aiService';
 
-const server: FastifyInstance = Fastify({});
+const server: FastifyInstance = Fastify({
+  logger: true // Enable built-in logger
+});
 const crosswordService = CrosswordService.getInstance();
 const aiService = AIService.getInstance();
 
@@ -63,5 +65,11 @@ const start = async () => {
     process.exit(1)
   }
 }
+
+// Add this error handler
+server.setErrorHandler((error, request, reply) => {
+  server.log.error(error)
+  reply.status(500).send({ error: 'Internal Server Error' })
+})
 
 start()
