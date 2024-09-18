@@ -44,7 +44,7 @@ server.post('/words', async (request: any, reply: any) => {
   questions?.forEach((pair) => {
     addWord(pair[0], pair[1]);
   });
-  return reply.send({ questions });
+  return reply.send({ success: questions && questions.length > 0 });
 })
 
 server.get('/crossword', async (request, reply) => {
