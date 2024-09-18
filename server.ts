@@ -1,9 +1,11 @@
-import Fastify, { FastifyInstance, RouteShorthandOptions } from 'fastify'
+import Fastify, { FastifyInstance, RouteShorthandOptions } from 'fastify';
 import { CrosswordService } from './services/crosswordService'
 import { addWord, getWords } from './services/dataService';
+import { AIService } from './services/aiService';
 
-const server: FastifyInstance = Fastify({})
-const crosswordService = CrosswordService.getInstance()
+const server: FastifyInstance = Fastify({});
+const crosswordService = CrosswordService.getInstance();
+const aiService = AIService.getInstance();
 
 const opts: RouteShorthandOptions = {
   schema: {
@@ -34,6 +36,15 @@ server.post('/word', async (request: any, reply: any) => {
 server.get('/words', async (request: any, reply: any) => {
   const words = await getWords();
   return reply.send({ words });
+})
+
+server.post('/words', async (request: any, reply: any) => {
+  const words = request.body.words;
+  const questions = await aiService.getAnswerForWords(words);
+  questions?.forEach((pair) => {
+    addWord(pair[0], pair[1]);
+  });
+  return reply.send({ questions });
 })
 
 server.get('/crossword', async (request, reply) => {
