@@ -132,3 +132,4 @@ dist
 # custom Crosswords related files
 db/crosswordsdb.sqlite
 test.csv
+utils/report.txt
