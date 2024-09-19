@@ -97,10 +97,18 @@ export class Crossword {
                     .filter(x => x.existingCell !== undefined);
 
                 // check if ALL potentialCrossings are eligible
-                const isExistingCellsOk = potentialCrossings.every(x => 
+                const isExistingCellsHaveRightLettersInIntersections = potentialCrossings.every(x => 
                     linkingTargets.includes(x.existingCell!) && x.existingCell!.letter === x.potentialCell.letter);
 
-                if (isExistingCellsOk) { 
+                const preStartNeighbourCell = isHorizontal
+                    ? this.cells.find(c => c.y === startY && c.x === startX - 1)
+                    : this.cells.find(c => c.x === startX && c.y === startY - 1);
+                const postEndtNeighbourCell = isHorizontal
+                    ? this.cells.find(c => c.y === startY && c.x === startX + word.length)
+                    : this.cells.find(c => c.x === startX && c.y === startY + word.length);
+
+                const isNeighbourCellsOk = !preStartNeighbourCell && !postEndtNeighbourCell;
+                if (isExistingCellsHaveRightLettersInIntersections && isNeighbourCellsOk) { 
                     this.addAnswer(startX, startY, word, isHorizontal);
                     return true;
                 }
