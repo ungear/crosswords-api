@@ -100,15 +100,40 @@ export class Crossword {
                 const isExistingCellsHaveRightLettersInIntersections = potentialCrossings.every(x => 
                     linkingTargets.includes(x.existingCell!) && x.existingCell!.letter === x.potentialCell.letter);
 
+                // check X cells when inserting "new"
+                // . . p . .
+                // X n e w X
+                // . . n . .
                 const preStartNeighbourCell = isHorizontal
                     ? this.cells.find(c => c.y === startY && c.x === startX - 1)
                     : this.cells.find(c => c.x === startX && c.y === startY - 1);
                 const postEndtNeighbourCell = isHorizontal
                     ? this.cells.find(c => c.y === startY && c.x === startX + word.length)
                     : this.cells.find(c => c.x === startX && c.y === startY + word.length);
-
                 const isNeighbourCellsOk = !preStartNeighbourCell && !postEndtNeighbourCell;
-                if (isExistingCellsHaveRightLettersInIntersections && isNeighbourCellsOk) { 
+
+                // check X cells when inserting "new"
+                // . X p X .
+                // . n e w .
+                // . X n X .
+                const nonCrossingWordCells = potentialCells
+                    .map(pc => ({ existingCell: this.cells.find(c => c.x === pc.x && c.y === pc.y), potentialCell: pc }))
+                    .filter(x => x.existingCell === undefined);
+                const occupiedCellsAroundNonCrossingCells =
+                    nonCrossingWordCells.reduce((acc, cell) => {
+                        const cellUp = this.cells.find(c => c.x === cell.potentialCell.x && c.y === cell.potentialCell.y - 1);
+                        const cellDown = this.cells.find(c => c.x === cell.potentialCell.x && c.y === cell.potentialCell.y + 1);
+                        const cellLeft = this.cells.find(c => c.x === cell.potentialCell.x - 1 && c.y === cell.potentialCell.y);
+                        const cellRight = this.cells.find(c => c.x === cell.potentialCell.x + 1 && c.y === cell.potentialCell.y);
+                        if (cellUp && isHorizontal) acc.push(cellUp);
+                        if (cellDown && isHorizontal) acc.push(cellDown);
+                        if (cellLeft && !isHorizontal) acc.push(cellLeft);
+                        if (cellRight && !isHorizontal) acc.push(cellRight);
+                        return acc;
+                    }, [] as Cell[])
+
+                const isCellsAroundNonCrossingCellsOk = occupiedCellsAroundNonCrossingCells.length === 0;
+                if (isExistingCellsHaveRightLettersInIntersections && isNeighbourCellsOk && isCellsAroundNonCrossingCellsOk) { 
                     this.addAnswer(startX, startY, word, isHorizontal);
                     return true;
                 }
