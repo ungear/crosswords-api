@@ -1,6 +1,6 @@
 import Fastify, { FastifyInstance, RouteShorthandOptions } from 'fastify';
 import { CrosswordService } from './services/crosswordService'
-import { addWord, getWords } from './services/dataService';
+import { addWord, getRandomQuestions, getWords } from './services/dataService';
 import { AIService } from './services/aiService';
 
 const server: FastifyInstance = Fastify({
@@ -50,7 +50,8 @@ server.post('/words', async (request: any, reply: any) => {
 })
 
 server.get('/crossword', async (request, reply) => {
-  return crosswordService.generateCrossword(["banana", "apple", "spire"]);
+  const questions = await getRandomQuestions(10);
+  return crosswordService.generateCrossword(questions.map(q => q.word));
 })
 
 const start = async () => {
