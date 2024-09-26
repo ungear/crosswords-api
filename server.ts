@@ -2,6 +2,7 @@ import Fastify, { FastifyInstance, RouteShorthandOptions } from 'fastify';
 import { CrosswordService } from './services/crosswordService'
 import { addWord, getRandomQuestions, getWords } from './services/dataService';
 import { AIService } from './services/aiService';
+import { getConfig } from './config';
 
 const server: FastifyInstance = Fastify({
   logger: true // Enable built-in logger
@@ -56,11 +57,7 @@ server.get('/crossword', async (request, reply) => {
 
 const start = async () => {
   try {
-    await server.listen({ port: 3000 })
-
-    const address = server.server.address()
-    const port = typeof address === 'string' ? address : address?.port
-
+    await server.listen({ port: getConfig().port })
   } catch (err) {
     server.log.error(err)
     process.exit(1)
