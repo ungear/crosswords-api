@@ -51,8 +51,8 @@ server.post('/words', async (request: any, reply: any) => {
 })
 
 server.get('/crossword', async (request, reply) => {
-  const questions = await getRandomQuestions(10);
-  return crosswordService.generateCrossword(questions.map(q => q.word));
+  const words = await getRandomQuestions(10);
+  return crosswordService.generateCrossword(words);
 })
 
 const start = async () => {

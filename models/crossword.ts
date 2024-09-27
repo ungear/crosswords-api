@@ -2,21 +2,24 @@ import { Answer } from "./answer";
 import { Cell } from "./cell";
 
 export class Crossword {
+    questions: string[];
     answers: Answer[];
     cells: Cell[];
     verticalLinkingTargets: Cell[];
     horizontalLinkingTargets: Cell[];
 
     constructor() {
+        this.questions = [];
         this.answers = [];
         this.cells = [];
         this.verticalLinkingTargets = [];
         this.horizontalLinkingTargets = [];
     }
 
-    public addAnswer(startX: number, startY: number, word: string, isHorizontal: boolean): void {
+    public addAnswer(startX: number, startY: number, word: string, question: string, isHorizontal: boolean): void {
         const answer = new Answer(word, isHorizontal);
         this.answers.push(answer);
+        this.questions.push(question);
         const answerIndex = this.answers.length - 1;
 
         let currentX = startX;
@@ -65,7 +68,7 @@ export class Crossword {
         }
     }
 
-    public tryAddAnswer(word: string, isHorizontal: boolean): boolean {
+    public tryAddAnswer(word: string, question: string, isHorizontal: boolean): boolean {
         const linkingTargets = isHorizontal
             ? this.horizontalLinkingTargets
             : this.verticalLinkingTargets;
@@ -134,7 +137,7 @@ export class Crossword {
 
                 const isCellsAroundNonCrossingCellsOk = occupiedCellsAroundNonCrossingCells.length === 0;
                 if (isExistingCellsHaveRightLettersInIntersections && isNeighbourCellsOk && isCellsAroundNonCrossingCellsOk) { 
-                    this.addAnswer(startX, startY, word, isHorizontal);
+                    this.addAnswer(startX, startY, word, question, isHorizontal);
                     return true;
                 }
             }

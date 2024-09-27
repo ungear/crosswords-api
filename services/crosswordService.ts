@@ -1,3 +1,4 @@
+import { WordEntity } from "../entities/wordEntity";
 import { Crossword } from "../models/crossword";
 import { ExportService } from "./exportService";
 
@@ -18,19 +19,19 @@ export class CrosswordService {
     return CrosswordService.instance;
   }
 
-  public generateCrossword(words: string[] ): Crossword {
+  public generateCrossword(words: WordEntity[] ): Crossword {
     const crossword = new Crossword();
     const wordsList = [...words];
 
-    crossword.addAnswer(0, 0, words[0], true); // true for horizontal
+    crossword.addAnswer(0, 0, words[0].word, words[0].answer, true); // true for horizontal
     wordsList.shift();
     let round = 1;
     const attemptsNumber = 2;
     while (round <= attemptsNumber && wordsList.length > 0) {
       for (let i = 0; i < wordsList.length; i++) {
-        let isSuccess = crossword.tryAddAnswer(wordsList[i], true); // true for horizontal
+        let isSuccess = crossword.tryAddAnswer(wordsList[i].word, wordsList[i].answer, true); // true for horizontal
         if (!isSuccess) {
-            isSuccess = crossword.tryAddAnswer(wordsList[i], false); // false for vertical
+            isSuccess = crossword.tryAddAnswer(wordsList[i].word, wordsList[i].answer, false); // false for vertical
         }
         if (isSuccess) {
             wordsList.splice(i, 1);
