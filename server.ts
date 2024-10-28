@@ -3,6 +3,7 @@ import { CrosswordService } from './services/crosswordService'
 import { addWord, getRandomQuestions, getWords } from './services/dataService';
 import { AIService } from './services/aiService';
 import { getConfig } from './config';
+import { CrosswordDto } from './models/croswordDto';
 
 const server: FastifyInstance = Fastify({
   logger: true // Enable built-in logger
@@ -52,7 +53,8 @@ server.post('/words', async (request: any, reply: any) => {
 
 server.get('/crossword', async (request, reply) => {
   const words = await getRandomQuestions(10);
-  return crosswordService.generateCrossword(words);
+  const crossword = crosswordService.generateCrossword(words);
+  return new CrosswordDto(crossword);
 })
 
 const start = async () => {
