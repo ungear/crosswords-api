@@ -8,7 +8,14 @@ import { wordsPost } from './endpoints/wordsPost';
 
 const server: FastifyInstance = Fastify({
   logger: true // Enable built-in logger
+
 });
+
+// enable CORS
+server.addHook('onRequest', (request, reply, done) => {
+  reply.header('Access-Control-Allow-Origin', '*');
+  done()
+})
 
 server.register(require('@fastify/swagger'), {
   swagger: {
